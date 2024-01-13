@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "machine_learning_with_microcontrollers"
+version = "0.1.0"
+description = "This folder contains project files aiming to connect machine learning algorithms with microcontrollers. The end goal is to run an computer vision model with a microcontroller in order to detect objects."
+authors = ["Benjamin Henriquez Soto"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.10"
+numpy = ">=1.22,<1.25"
+pandas = "^2.1.4"
+pyserial = "^3.5"
+tensorflow = { version = "2.13.0", platform = "darwin" }
+tensorflow-io-gcs-filesystem = [
+    { version = ">= 0.23.1, <0.35.0", platform = "darwin" }
+]
+matplotlib = "^3.8.2"
+mpld3 = "^0.5.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
