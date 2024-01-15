@@ -1,6 +1,6 @@
 """
-This module aims to convert the data get from the microcontroller, to a handleable visualization that
-allows to see how the different variables behavior through time.
+This module aims to convert the data get from the microcontroller, to a handleable
+visualization that allows to see how the different variables behavior through time.
 """
 
 import sys
@@ -10,18 +10,16 @@ from collections import deque
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.animation import FuncAnimation
+from matplotlib.widgets import TextBox
 from serial import Serial
-
-from matplotlib.widgets import Button, TextBox
-
-
 
 # Check if the CSV file name was passed as a command-line argument
 if len(sys.argv) > 1:
     csv_filename = sys.argv[1]
 else:
     print(
-        "CSV file name not provided. Please provide a CSV file name as a command-line argument."
+        "CSV file name not provided. Please provide a CSV file name as a command-line"
+        " argument."
     )
     sys.exit()
 
@@ -66,20 +64,16 @@ def save_data(data):
     Args:
         data (dict): Dictionary with the data collected from the microcontroller.
     """
-    df = pd.DataFrame(data)
-    df.to_csv(f"data_collection/{csv_filename}.csv", index=False)
+    collected_data_df = pd.DataFrame(data)
+    collected_data_df.to_csv(f"data_collection/{csv_filename}.csv", index=False)
     print(f"Data saved to {csv_filename}.csv.")
 
 
 # This function is called periodically from FuncAnimation
-def animate(i):
+def animate():
     """
     Update the data of the plots, and store the data if the recording flag is True.
-
-    Args:
-        i (int): Iteration number.
     """
-    global recording, data_store
     if ser.in_waiting:
         line = ser.readline()
         try:
@@ -133,7 +127,6 @@ def animate(i):
 
         except UnicodeDecodeError:
             print("UnicodeDecodeError")
-            pass
 
 
 # Initialize your figure and subplots
@@ -188,6 +181,7 @@ axs[1][2].lines[0].set_color("blue")
 ax_button = plt.axes([0.92, 0.95, 0.05, 0.02])
 button = plt.Button(ax_button, "Record", color="white")
 
+
 # Button callback function
 def button_callback(event):
     """
@@ -207,6 +201,7 @@ def button_callback(event):
             button.label.set_text("Record")
             save_data(data_store)
 
+
 # Add pause button
 ax_button_pause = plt.axes([0.92, 0.92, 0.05, 0.02])
 button_pause = plt.Button(ax_button_pause, "Pause", color="white")
@@ -214,6 +209,7 @@ button_pause = plt.Button(ax_button_pause, "Pause", color="white")
 # Add write filename box
 ax_filename = plt.axes([0.92, 0.89, 0.05, 0.02])
 text_box = TextBox(ax_filename, "Filename", initial="data")
+
 
 # Add write filename box callback function
 def text_box_callback(text):
@@ -227,7 +223,6 @@ def text_box_callback(text):
     csv_filename = text
 
 
-
 # Button callback function
 def button_callback_pause(event):
     """
@@ -236,7 +231,7 @@ def button_callback_pause(event):
     Args:
         event (matplotlib.backend_bases.MouseEvent): Event object.
     """
-    global recording, data_store
+    global recording
     if event.inaxes == ax_button_pause:
         recording = not recording
         if recording:
@@ -244,13 +239,11 @@ def button_callback_pause(event):
         else:
             button_pause.label.set_text("Resume")
 
+
 # Add button callback function
 button.on_clicked(button_callback)
 button_pause.on_clicked(button_callback_pause)
 text_box.on_submit(text_box_callback)
-
-
-
 
 
 # Set up plot to call animate() function periodically
